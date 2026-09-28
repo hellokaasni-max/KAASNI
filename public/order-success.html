@@ -1,0 +1,150 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Placed — Kaasni</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="container">
+  <div class="empty-state" id="success-root">
+    <h2>Thank you</h2>
+    <p>Loading your order details…</p>
+  </div>
+</div>
+
+<script src="/js/api.js"></script>
+<script src="/js/cart.js"></script>
+<script src="/js/layout.js"></script>
+<script>
+const raw = sessionStorage.getItem('kaasni_last_order');
+const root = document.querySelector('#success-root');
+
+if (!raw) {
+  root.innerHTML = `
+    <h2>No recent order found</h2>
+    <p>
+      If you just placed an order, check your confirmation details
+      or contact Kaasni support.
+    </p>
+    <a href="/" class="btn">Back to home</a>
+  `;
+} else {
+  const order = JSON.parse(raw);
+  const orderNumber = order.order_number || '';
+  const total = formatMoney(order.total);
+
+  const whatsappMessage =
+    'Hello Kaasni! I just placed an order.%0A%0A' +
+    'Order Number: ' + encodeURIComponent(orderNumber) + '%0A' +
+    'Total: ' + encodeURIComponent(total) + '%0A%0A' +
+    'Please confirm my order.';
+
+  const whatsappUrl =
+    'https://wa.me/919831150476?text=' + whatsappMessage;
+
+  root.innerHTML = `
+    <h2>Order placed successfully</h2>
+
+    <p style="margin-bottom:10px;">
+      Thank you for shopping with Kaasni.
+    </p>
+
+    <p style="
+      font-size:13px;
+      color:#7A6E63;
+      margin-bottom:8px;
+      text-transform:uppercase;
+      letter-spacing:1.5px;
+    ">
+      Your order number
+    </p>
+
+    <div style="
+      font-family:var(--font-display);
+      font-size:30px;
+      color:var(--maroon);
+      font-weight:600;
+      margin-bottom:12px;
+    " id="order-number">
+      ${escapeHtml(orderNumber)}
+    </div>
+
+    <button
+      type="button"
+      class="btn outline"
+      id="copy-order-btn"
+      style="margin-bottom:24px;"
+    >
+      Copy order number
+    </button>
+
+    <p style="margin-bottom:8px;">
+      Total: <strong>${total}</strong>
+    </p>
+
+    <p style="
+      font-size:13px;
+      color:#7A6E63;
+      margin:18px auto 26px;
+      max-width:480px;
+    ">
+      Save your order number. You will need it together with
+      the phone number used at checkout to track your order.
+    </p>
+
+    <div style="
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+    ">
+      <a
+        href="${whatsappUrl}"
+        class="btn"
+        target="_blank"
+        rel="noopener"
+      >
+        Send order on WhatsApp
+      </a>
+
+      <a href="/track-order.html" class="btn outline">
+        Track your order
+      </a>
+    </div>
+
+    <div id="copy-message" style="
+      margin-top:14px;
+      font-size:13px;
+      color:#7A6E63;
+      min-height:20px;
+    "></div>
+
+    <p style="margin-top:30px;">
+      <a href="/" class="section-link">Continue shopping</a>
+    </p>
+  `;
+
+  document
+    .querySelector('#copy-order-btn')
+    .addEventListener('click', async () => {
+      const message = document.querySelector('#copy-message');
+
+      try {
+        await navigator.clipboard.writeText(orderNumber);
+        message.textContent = 'Order number copied.';
+      } catch (err) {
+        message.textContent =
+          'Please copy the order number manually: ' + orderNumber;
+      }
+    });
+}
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track Your Order — Kaasni</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="page-head">
+  <span class="section-eyebrow">Where's my order</span>
+  <h1>Track your order</h1>
+</div>
+
+<div class="container" style="max-width:560px;padding-bottom:90px;">
+  <form id="track-form">
+    <div class="field">
+      <label for="order_number">Order number</label>
+      <input id="order_number" name="order_number" type="text" placeholder="KSH-XXXXXXXX-XXXX" autocomplete="off" autocapitalize="characters" required>
+    </div>
+    <div class="field">
+      <label for="phone">Phone number used at checkout</label>
+      <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="e.g. 98311 50476" required>
+    </div>
+    <div id="track-error" class="form-error" style="display:none;"></div>
+    <button class="btn full" type="submit">Track order</button>
+  </form>
+
+  <div id="track-result" style="margin-top:40px;"></div>
+</div>
+
+<script src="/js/api.js"></script>
+<script src="/js/cart.js"></script>
+<script src="/js/layout.js"></script>
+<script>
+  const STATUS_LABEL = {
+    pending: 'Order received', confirmed: 'Confirmed', shipped: 'Shipped',
+    delivered: 'Delivered', cancelled: 'Cancelled',
+  };
+
+  document.querySelector('#track-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const errorEl = document.querySelector('#track-error');
+    const resultEl = document.querySelector('#track-result');
+    const submitBtn = e.target.querySelector('button[type=submit]');
+    submitBtn.setAttribute('aria-busy', 'true');
+    errorEl.style.display = 'none';
+    resultEl.innerHTML = '';
+
+    const order_number = e.target.order_number.value.trim();
+    const phone = e.target.phone.value.trim();
+
+    try {
+      const { order } = await apiRequest(`/orders/track?order_number=${encodeURIComponent(order_number)}&phone=${encodeURIComponent(phone)}`);
+      const items = order.items.map((i) => `
+        <div class="summary-row"><span>${escapeHtml(i.product_name)} × ${i.quantity}${i.size ? `<small>Size ${escapeHtml(i.size)}</small>` : ''}</span><span>${formatMoney(i.line_total)}</span></div>
+      `).join('');
+      const flow = ['pending', 'confirmed', 'shipped', 'delivered'];
+      const at = flow.indexOf(order.status);
+      const timeline = order.status === 'cancelled'
+        ? '<div class="track-cancelled">This order was cancelled. Please contact us if you have questions.</div>'
+        : `<ol class="track-steps" aria-label="Order progress">${flow.map((k, i) => `<li class="${i <= at ? 'done' : ''}">${STATUS_LABEL[k]}</li>`).join('')}</ol>`;
+      resultEl.innerHTML = `
+        <div class="summary-box">
+          ${timeline}
+          <div class="summary-row"><span>Order</span><span>${escapeHtml(order.order_number)}</span></div>
+          <div class="summary-row"><span>Status</span><span>${STATUS_LABEL[order.status] || order.status}</span></div>
+          <div class="summary-row"><span>Placed on</span><span>${new Date(order.created_at).toLocaleDateString('en-IN')}</span></div>
+          <div class="zari-divider" style="margin:16px 0;"></div>
+          ${items}
+          <div class="summary-row total"><span>Total</span><span>${formatMoney(order.total)}</span></div>
+        </div>
+      `;
+    } catch (err) {
+      errorEl.textContent = err.message;
+      errorEl.style.display = 'block';
+    } finally {
+      submitBtn.removeAttribute('aria-busy');
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login — Kaasni</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/admin/css/admin.css">
+</head>
+<body>
+<div class="login-screen">
+  <div class="login-card">
+    <div class="logo">Kaasni</div>
+    <div class="subtitle">Admin panel</div>
+    <form id="login-form">
+      <div class="field">
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" required autocomplete="username">
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" required autocomplete="current-password">
+      </div>
+      <div id="login-error" class="form-error" style="display:none;"></div>
+      <button class="btn" type="submit" style="width:100%;justify-content:center;margin-top:8px;">Sign in</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  const ADMIN_TOKEN_KEY = 'kaasni_admin_token';
+  const ADMIN_INFO_KEY = 'kaasni_admin_info';
+
+  // If already logged in, skip straight to the dashboard.
+  if (localStorage.getItem(ADMIN_TOKEN_KEY)) {
+    window.location.href = '/admin/dashboard.html';
+  }
+
+  document.querySelector('#login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const errorEl = document.querySelector('#login-error');
+    errorEl.style.display = 'none';
+    const username = e.target.username.value.trim();
+    const password = e.target.password.value;
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Login failed.');
+
+      localStorage.setItem(ADMIN_TOKEN_KEY, data.token);
+      localStorage.setItem(ADMIN_INFO_KEY, JSON.stringify(data.admin));
+      window.location.href = '/admin/dashboard.html';
+    } catch (err) {
+      errorEl.textContent = err.message;
+      errorEl.style.display = 'block';
+    }
+  });
+</script>
+</body>
+</html>

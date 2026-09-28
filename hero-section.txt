@@ -1,0 +1,14 @@
+﻿<section class="hero hero-fallback-pattern" id="hero">
+  <div class="hero-slides" id="hero-slides"></div>
+
+  <div class="container hero-content">
+    <div class="hero-eyebrow">Elegant kurtis, crafted for today</div>
+    <h1 id="hero-title">KAASNI</h1>
+    <p id="hero-subtitle">Thoughtfully designed kurtis rooted in Indian craftsmanship.</p>
+    <a href="/collection.html?category=kurtis" class="btn gold" id="hero-cta">Shop Kurtis</a>
+  </div>
+
+  <button class="hero-arrow hero-prev" id="hero-prev" type="button" aria-label="Previous banner">&#8249;</button>
+  <button class="hero-arrow hero-next" id="hero-next" type="button" aria-label="Next banner">&#8250;</button>
+  <div class="hero-dots" id="hero-dots"></div>
+</section>

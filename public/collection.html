@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title id="page-title">Shop — Kaasni</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+    <!-- ==================== PAGE HEADER ==================== -->
+  <section class="page-head">
+    <span class="section-eyebrow">The Collection</span>
+    <h1 id="collection-heading">All Products</h1>
+    <p class="page-sub" id="collection-sub"></p>
+  </section>
+
+
+  <!-- ==================== COLLECTION ==================== -->
+  <main class="container">
+
+    <div class="filters-bar">
+
+      <div class="filter-pills" id="filter-pills" role="navigation" aria-label="Categories">
+        <a class="filter-pill active" data-category="" href="/collection.html">All Products</a>
+      </div>
+
+      <select
+        class="sort-select"
+        id="sort-select"
+        aria-label="Sort products"
+      >
+        <option value="newest">Newest</option>
+        <option value="price_asc">Price: Low to High</option>
+        <option value="price_desc">Price: High to Low</option>
+        <option value="name_asc">Name: A–Z</option>
+      </select>
+
+    </div>
+
+
+    <!-- Products are loaded dynamically -->
+    <div
+      class="product-grid"
+      id="collection-grid"
+      style="margin-bottom: 80px;"
+    >
+
+      <div
+        class="skeleton"
+        style="aspect-ratio: 3 / 4;"
+        aria-hidden="true"
+      ></div>
+
+      <div
+        class="skeleton"
+        style="aspect-ratio: 3 / 4;"
+        aria-hidden="true"
+      ></div>
+
+      <div
+        class="skeleton"
+        style="aspect-ratio: 3 / 4;"
+        aria-hidden="true"
+      ></div>
+
+      <div
+        class="skeleton"
+        style="aspect-ratio: 3 / 4;"
+        aria-hidden="true"
+      ></div>
+
+    </div>
+
+  </main>
+
+
+    <!-- ==================== SCRIPTS ==================== -->
+  <script src="/js/api.js"></script>
+  <script src="/js/cart.js"></script>
+  <script src="/js/layout.js"></script>
+  <script src="/js/render.js"></script>
+  <script src="/js/collection.js"></script>
+
+</body>
+</html>

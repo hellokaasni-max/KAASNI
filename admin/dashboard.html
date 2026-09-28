@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Kaasni Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/admin/css/admin.css">
+</head>
+<body>
+<div class="admin-shell">
+  <aside class="sidebar">
+    <div class="logo">Kaasni</div>
+    <nav>
+      <a href="/admin/dashboard.html" class="active">Dashboard</a>
+      <a href="/admin/products.html">Products</a>
+      <a href="/admin/categories.html">Categories</a>
+      <a href="/admin/orders.html">Orders</a>
+      <a href="/admin/customers.html">Customers</a>
+      <a href="/admin/banners.html">Banners</a>
+      <a href="/admin/settings.html">Settings</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button id="logout-btn">Log out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <h1>Dashboard</h1>
+      <span class="admin-name" id="admin-name"></span>
+    </div>
+    <div class="content">
+      <div class="stat-grid" id="stat-grid">
+        <div class="stat-card"><div class="label">Revenue</div><div class="value">…</div></div>
+        <div class="stat-card"><div class="label">Orders</div><div class="value">…</div></div>
+        <div class="stat-card"><div class="label">Products live</div><div class="value">…</div></div>
+        <div class="stat-card"><div class="label">Customers</div><div class="value">…</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h2>Recent orders</h2><a href="/admin/orders.html" class="btn small outline">View all</a></div>
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>Order</th><th>Customer</th><th>Status</th><th>Total</th><th>Placed</th></tr></thead>
+            <tbody id="recent-orders-body"><tr><td colspan="5" class="table-empty">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h2>Top selling pieces</h2></div>
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>Product</th><th>Units sold</th></tr></thead>
+            <tbody id="top-products-body"><tr><td colspan="2" class="table-empty">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/admin/js/admin-api.js"></script>
+<script src="/admin/js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Categories — Kaasni Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/admin/css/admin.css">
+</head>
+<body>
+<div class="admin-shell">
+  <aside class="sidebar">
+    <div class="logo">Kaasni</div>
+    <nav>
+      <a href="/admin/dashboard.html">Dashboard</a>
+      <a href="/admin/products.html">Products</a>
+      <a href="/admin/categories.html" class="active">Categories</a>
+      <a href="/admin/orders.html">Orders</a>
+      <a href="/admin/customers.html">Customers</a>
+      <a href="/admin/banners.html">Banners</a>
+      <a href="/admin/settings.html">Settings</a>
+    </nav>
+    <div class="sidebar-footer"><button id="logout-btn">Log out</button></div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <h1>Categories</h1>
+      <span class="admin-name" id="admin-name"></span>
+    </div>
+    <div class="content">
+      <div class="card">
+        <div class="card-head">
+          <p class="muted" style="margin:0;">Categories appear in the storefront menu, footer, filters and product pages.</p>
+          <button class="btn" id="new-category-btn">+ Add category</button>
+        </div>
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>Order</th><th>Name</th><th>Storefront link</th><th>Products</th><th></th></tr></thead>
+            <tbody id="categories-body"><tr><td colspan="5" class="table-empty">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="category-overlay">
+  <div class="drawer">
+    <div class="drawer-head">
+      <h2 id="drawer-title">Add category</h2>
+      <button class="drawer-close" id="drawer-close" type="button">&times;</button>
+    </div>
+    <form id="category-form">
+      <input type="hidden" id="category-id">
+      <div class="field">
+        <label for="c-name">Name</label>
+        <input id="c-name" required maxlength="60" placeholder="e.g. Kurtis, Dupattas, Sarees">
+        <small class="muted" id="c-slug-hint"></small>
+      </div>
+      <div class="field">
+        <label for="c-description">Description <span class="muted">(shown on the category page)</span></label>
+        <textarea id="c-description" rows="3" maxlength="200"></textarea>
+      </div>
+      <div class="field">
+        <label for="c-sort">Display order <span class="muted">(lower shows first)</span></label>
+        <input id="c-sort" type="number" step="1" value="0">
+      </div>
+      <div id="category-error" class="form-error" style="display:none;color:var(--error);margin-bottom:12px;"></div>
+      <div class="flex-between" style="gap:10px;">
+        <button class="btn" type="submit" id="save-category-btn">Save category</button>
+        <button class="btn danger outline" type="button" id="delete-category-btn" style="display:none;">Delete</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="/admin/js/admin-api.js"></script>
+<script src="/admin/js/categories.js"></script>
+</body>
+</html>

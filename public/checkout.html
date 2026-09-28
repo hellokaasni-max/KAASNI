@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Checkout — Kaasni</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<div class="page-head">
+  <span class="section-eyebrow">Almost there</span>
+  <h1>Checkout</h1>
+</div>
+
+
+<div
+  class="container"
+  style="padding-bottom:90px;"
+>
+
+  <div class="cart-layout">
+
+    <!-- CHECKOUT FORM -->
+
+    <form id="checkout-form">
+
+      <h3 style="margin-bottom:18px;">
+        Delivery details
+      </h3>
+
+
+      <div class="field">
+
+        <label for="name">
+          Full name
+        </label>
+
+        <input
+          id="name"
+          name="name"
+          type="text"
+          required
+          autocomplete="name"
+        >
+
+      </div>
+
+
+      <div class="field-row">
+
+        <div class="field">
+
+          <label for="phone">
+            Phone number
+          </label>
+
+          <input
+            id="phone"
+            name="phone"
+            type="tel"
+            required
+            autocomplete="tel"
+          >
+
+        </div>
+
+
+        <div class="field">
+
+          <label for="email">
+            Email (optional)
+          </label>
+
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autocomplete="email"
+          >
+
+        </div>
+
+      </div>
+
+
+      <div class="field">
+
+        <label for="address">
+          Address
+        </label>
+
+        <textarea
+          id="address"
+          name="address"
+          rows="3"
+          required
+          autocomplete="street-address"
+        ></textarea>
+
+      </div>
+
+
+      <div class="field-row">
+
+        <div class="field">
+
+          <label for="city">
+            City
+          </label>
+
+          <input
+            id="city"
+            name="city"
+            type="text"
+            required
+            autocomplete="address-level2"
+          >
+
+        </div>
+
+
+        <div class="field">
+
+          <label for="state">
+            State
+          </label>
+
+          <input
+            id="state"
+            name="state"
+            type="text"
+            required
+            autocomplete="address-level1"
+          >
+
+        </div>
+
+      </div>
+
+
+      <div class="field">
+
+        <label for="pincode">
+          Pincode
+        </label>
+
+        <input
+          id="pincode"
+          name="pincode"
+          type="text"
+          required
+          inputmode="numeric"
+          autocomplete="postal-code"
+        >
+
+      </div>
+
+
+      <!-- ONLINE PAYMENT ONLY -->
+
+      <h3 style="margin:30px 0 18px;">
+        Payment
+      </h3>
+
+      <div
+        class="field"
+        style="
+          padding:18px;
+          border:1px solid #e5ded6;
+          border-radius:4px;
+        "
+      >
+
+        <div
+          style="
+            display:flex;
+            align-items:center;
+            gap:12px;
+            margin-bottom:8px;
+          "
+        >
+
+          <span
+            style="
+              font-size:22px;
+              line-height:1;
+            "
+          >
+            🔒
+          </span>
+
+          <strong>
+            Secure online payment
+          </strong>
+
+        </div>
+
+        <p
+          class="form-note"
+          style="margin:0;"
+        >
+          Pay securely using Razorpay. Depending on the payment
+          methods enabled for our account, you may see UPI,
+          cards, net banking and other supported online methods.
+        </p>
+
+      </div>
+
+
+      <p class="form-note">
+        Your payment is processed securely by Razorpay.
+        Kaasni does not store your card or UPI credentials.
+      </p>
+
+
+      <div class="field">
+
+        <label for="notes">
+          Order notes (optional)
+        </label>
+
+        <textarea
+          id="notes"
+          name="notes"
+          rows="2"
+        ></textarea>
+
+      </div>
+
+
+      <div
+        id="checkout-error"
+        class="form-error"
+        style="display:none;"
+      ></div>
+
+
+      <button
+        class="btn full"
+        type="submit"
+        id="place-order-btn"
+      >
+        Pay securely
+      </button>
+
+    </form>
+
+
+    <!-- ORDER SUMMARY -->
+
+    <div
+      class="summary-box"
+      id="order-summary"
+    ></div>
+
+  </div>
+
+</div>
+
+
+<!-- API -->
+<script src="/js/api.js"></script>
+
+<!-- CART -->
+<script src="/js/cart.js"></script>
+<script src="/js/layout.js"></script>
+
+<!-- RAZORPAY -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<!-- CHECKOUT LOGIC -->
+<script src="/js/checkout.js"></script>
+
+</body>
+</html>

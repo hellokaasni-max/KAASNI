@@ -1,0 +1,254 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Banners - Kaasni Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/admin/css/admin.css">
+</head>
+
+<body>
+  <div class="admin-shell">
+    <aside class="sidebar">
+    <div class="logo">Kaasni</div>
+    <nav>
+      <a href="/admin/dashboard.html">Dashboard</a>
+      <a href="/admin/products.html">Products</a>
+      <a href="/admin/categories.html">Categories</a>
+      <a href="/admin/orders.html">Orders</a>
+      <a href="/admin/customers.html">Customers</a>
+      <a href="/admin/banners.html">Banners</a>
+      <a href="/admin/settings.html">Settings</a>
+    </nav>
+    <div class="sidebar-footer"><button id="logout-btn">Log out</button></div>
+  </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <h1>Banners</h1>
+          <span class="admin-name" id="admin-name"></span>
+        </div>
+
+        <button
+          class="btn small"
+          id="add-hero-btn"
+          type="button"
+        >
+          + Add hero slide
+        </button>
+      </header>
+
+      <div class="content">
+
+        <!-- HERO SLIDES -->
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h2>Homepage hero</h2>
+              <p class="muted" style="margin:4px 0 0;font-size:13px;">
+                Add up to 4 active hero slides. They rotate automatically on the homepage.
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="card-body"
+            id="hero-card-body"
+          >
+            Loading
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- BANNER DRAWER -->
+  <div
+    class="overlay"
+    id="banner-overlay"
+  >
+    <div class="drawer">
+
+      <div class="drawer-head">
+        <h2 id="banner-drawer-title">
+          Edit hero banner
+        </h2>
+
+        <button
+          class="icon-btn"
+          id="banner-drawer-close"
+          type="button"
+        >
+          
+        </button>
+      </div>
+
+      <form id="banner-form">
+
+        <input
+          type="hidden"
+          id="b-id"
+        >
+
+        <input
+          type="hidden"
+          id="b-position"
+          value="hero"
+        >
+
+        <div class="drawer-body">
+
+          <div
+            id="banner-error"
+            class="form-error"
+            style="display:none;"
+          ></div>
+
+          <div class="field">
+            <label for="b-title">Title</label>
+            <input
+              id="b-title"
+              type="text"
+              placeholder="Kaasni"
+            >
+          </div>
+
+          <div class="field">
+            <label for="b-subtitle">Subtitle</label>
+            <textarea
+              id="b-subtitle"
+              rows="3"
+              placeholder="Thoughtfully designed pieces rooted in Indian craftsmanship."
+            ></textarea>
+          </div>
+
+          <div class="field">
+            <label for="b-cta-text">Button text</label>
+            <input
+              id="b-cta-text"
+              type="text"
+              placeholder="Shop the Collection"
+            >
+          </div>
+
+          <div class="field">
+            <label for="b-cta-link">Button link</label>
+            <input
+              id="b-cta-link"
+              type="text"
+              placeholder="/collection.html or /collection.html?category=your-category-slug"
+            >
+          </div>
+
+          <div
+            class="field-row"
+            id="b-promo-only"
+          >
+            <div class="field">
+              <label for="b-sort">Display order</label>
+              <input
+                id="b-sort"
+                type="number"
+                min="0"
+                step="1"
+                value="0"
+              >
+            </div>
+
+            <div
+              class="checkbox-row"
+              style="margin-top:28px;"
+            >
+              <input
+                type="checkbox"
+                id="b-active"
+                checked
+              >
+
+              <label
+                for="b-active"
+                style="margin:0;text-transform:none;"
+              >
+                Active
+              </label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Banner image</label>
+
+            <label
+              for="b-image-input"
+              class="upload-box"
+            >
+              Click to upload / replace image
+            </label>
+
+            <input
+              id="b-image-input"
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              style="display:none;"
+            >
+
+            <img
+              id="b-preview"
+              alt="Banner preview"
+              style="
+                display:none;
+                width:100%;
+                margin-top:12px;
+                border-radius:4px;
+                object-fit:cover;
+                max-height:260px;
+              "
+            >
+          </div>
+
+        </div>
+
+        <div class="drawer-foot">
+
+          <button
+            type="button"
+            class="btn outline"
+            id="delete-banner-btn"
+            style="display:none;"
+          >
+            Delete
+          </button>
+
+          <div style="margin-left:auto;display:flex;gap:10px;">
+
+            <button
+              type="button"
+              class="btn outline"
+              id="banner-cancel-btn"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="submit"
+              class="btn"
+            >
+              Save banner
+            </button>
+
+          </div>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+  <script src="/admin/js/admin-api.js"></script>
+  <script src="/admin/js/banners.js"></script>
+</body>
+</html>
+

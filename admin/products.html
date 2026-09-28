@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Products — Kaasni Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/admin/css/admin.css">
+</head>
+<body>
+<div class="admin-shell">
+  <aside class="sidebar">
+    <div class="logo">Kaasni</div>
+    <nav>
+      <a href="/admin/dashboard.html">Dashboard</a>
+      <a href="/admin/products.html" class="active">Products</a>
+      <a href="/admin/categories.html">Categories</a>
+      <a href="/admin/orders.html">Orders</a>
+      <a href="/admin/customers.html">Customers</a>
+      <a href="/admin/banners.html">Banners</a>
+      <a href="/admin/settings.html">Settings</a>
+    </nav>
+    <div class="sidebar-footer"><button id="logout-btn">Log out</button></div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <h1>Products</h1>
+      <span class="admin-name" id="admin-name"></span>
+    </div>
+    <div class="content">
+      <div class="card">
+        <div class="card-head">
+          <div class="flex-between" style="gap:12px;">
+            <input type="text" class="search-input" id="search-input" placeholder="Search products…">
+            <select id="category-filter">
+              <option value="">All categories</option>
+            </select>
+          </div>
+          <button class="btn" id="new-product-btn">+ Add product</button>
+        </div>
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th></th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Featured</th><th>Status</th><th></th></tr></thead>
+            <tbody id="products-body"><tr><td colspan="8" class="table-empty">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="product-overlay">
+  <div class="drawer">
+    <div class="drawer-head">
+      <h2 id="drawer-title">Add product</h2>
+      <button class="drawer-close" id="drawer-close">&times;</button>
+    </div>
+
+    <form id="product-form">
+      <input type="hidden" id="product-id">
+      <div class="field">
+        <label for="p-name">Name</label>
+        <input id="p-name" required>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="p-category">Category</label>
+          <select id="p-category"></select>
+        </div>
+        <div class="field">
+          <label for="p-colour">Colour</label>
+          <input id="p-colour">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="p-price">Price (₹)</label>
+          <input id="p-price" type="number" min="0" step="1" required>
+        </div>
+        <div class="field">
+          <label for="p-compare">Compare-at price (optional)</label>
+          <input id="p-compare" type="number" min="0" step="1">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="p-fabric">Fabric</label>
+          <input id="p-fabric">
+        </div>
+        <div class="field">
+          <label for="p-stock">Stock</label>
+          <input id="p-stock" type="number" min="0" step="1" required>
+        </div>
+      </div>
+      <div class="field">
+        <label for="p-dimensions">Dimensions</label>
+        <input id="p-dimensions" placeholder="e.g. Length 215 in x Width 44 in">
+      </div>
+      <div class="field">
+        <label for="p-description">Description</label>
+        <textarea id="p-description" rows="4"></textarea>
+      </div>
+      <div class="field">
+        <label for="p-care">Care instructions</label>
+        <textarea id="p-care" rows="2"></textarea>
+      </div>
+      <div class="field-row">
+        <div class="checkbox-row"><input type="checkbox" id="p-featured"><label for="p-featured" style="margin:0;text-transform:none;">Featured on homepage</label></div>
+        <div class="checkbox-row"><input type="checkbox" id="p-active" checked><label for="p-active" style="margin:0;text-transform:none;">Visible in store</label></div>
+      </div>
+      <div class="field">
+          <label>Available Sizes</label>
+          <div class="checkbox-row" style="gap:18px;flex-wrap:wrap;">
+            <label style="margin:0;text-transform:none;">
+              <input type="checkbox" class="product-size" value="S"> S
+            </label>
+            <label style="margin:0;text-transform:none;">
+              <input type="checkbox" class="product-size" value="M"> M
+            </label>
+            <label style="margin:0;text-transform:none;">
+              <input type="checkbox" class="product-size" value="L"> L
+            </label>
+            <label style="margin:0;text-transform:none;">
+              <input type="checkbox" class="product-size" value="XL"> XL
+            </label>
+            <label style="margin:0;text-transform:none;">
+              <input type="checkbox" class="product-size" value="XXL"> XXL
+            </label>
+          </div>
+        </div>
+
+      <div id="image-section" style="display:none;">
+        <label style="display:block;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px;">Photos</label>
+        <div class="image-grid" id="image-grid"></div>
+        <label class="upload-zone" for="image-upload-input">Click to upload photos (jpg, png, webp)</label>
+        <input type="file" id="image-upload-input" accept="image/*" multiple hidden>
+      </div>
+      <p class="muted" id="image-hint" style="font-size:12px;display:none;">Save the product first, then add photos.</p>
+
+      <div id="product-error" class="form-error" style="display:none;"></div>
+      <div class="flex-between" style="margin-top:22px;">
+        <button type="button" class="btn outline danger" id="delete-product-btn" style="display:none;">Delete product</button>
+        <button type="submit" class="btn">Save product</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="/admin/js/admin-api.js"></script>
+<script src="/admin/js/products.js"></script>
+</body>
+</html>

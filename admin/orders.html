@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orders — Kaasni Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/admin/css/admin.css">
+</head>
+<body>
+<div class="admin-shell">
+  <aside class="sidebar">
+    <div class="logo">Kaasni</div>
+    <nav>
+      <a href="/admin/dashboard.html">Dashboard</a>
+      <a href="/admin/products.html">Products</a>
+      <a href="/admin/categories.html">Categories</a>
+      <a href="/admin/orders.html" class="active">Orders</a>
+      <a href="/admin/customers.html">Customers</a>
+      <a href="/admin/banners.html">Banners</a>
+      <a href="/admin/settings.html">Settings</a>
+    </nav>
+    <div class="sidebar-footer"><button id="logout-btn">Log out</button></div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <h1>Orders</h1>
+      <span class="admin-name" id="admin-name"></span>
+    </div>
+    <div class="content">
+      <div class="card">
+        <div class="card-head">
+          <div class="flex-between" style="gap:12px;">
+            <input type="text" class="search-input" id="search-input" placeholder="Search order #, name, phone…">
+            <select id="status-filter">
+              <option value="">All statuses</option>
+              <option value="pending">Pending</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="shipped">Shipped</option>
+              <option value="delivered">Delivered</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+          </div>
+        </div>
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>Order</th><th>Customer</th><th>Phone</th><th>Status</th><th>Total</th><th>Placed</th><th></th></tr></thead>
+            <tbody id="orders-body"><tr><td colspan="7" class="table-empty">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="order-overlay">
+  <div class="drawer" id="order-drawer">
+    <div class="drawer-head">
+      <h2 id="order-drawer-title">Order</h2>
+      <button class="drawer-close" id="order-drawer-close">&times;</button>
+    </div>
+    <div id="order-detail-body"></div>
+  </div>
+</div>
+
+<script src="/admin/js/admin-api.js"></script>
+<script src="/admin/js/orders.js"></script>
+</body>
+</html>
