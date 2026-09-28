@@ -960,98 +960,175 @@ adminRouter.get(
   requireAdmin,
   async (req, res) => {
     try {
-      const client = await db.getClient();
+      const result = await db.query(
+        'SELECT * FROM orders WHERE id = $1',
+        [req.params.id]
+      );
 
-      try {
-        await client.query('BEGIN');
+      const order = result.rows[0];
 
-        const result = await client.query(
-          'SELECT * FROM orders WHERE id = $1 FOR UPDATE',
-          [req.params.id]
-        );
-
-        const order = result.rows[0];
-
-        if (!order) {
-          await client.query('ROLLBACK');
-          return res.status(404).json({
-            error: 'Order not found.',
-          });
-        }
-
-        const nextStatus = status || order.status;
-
-        // Keep stock accurate: cancelling returns units to stock,
-        // and re-opening a cancelled order takes them out again.
-        if (order.status !== 'cancelled' && nextStatus === 'cancelled') {
-          await client.query(
-            `
-              UPDATE products p
-              SET stock = p.stock + oi.qty
-              FROM (
-                SELECT product_id, SUM(quantity)::int AS qty
-                FROM order_items
-                WHERE order_id = $1 AND product_id IS NOT NULL
-                GROUP BY product_id
-              ) oi
-              WHERE p.id = oi.product_id
-            `,
-            [order.id]
-          );
-        } else if (order.status === 'cancelled' && nextStatus !== 'cancelled') {
-          await client.query(
-            `
-              UPDATE products p
-              SET stock = GREATEST(p.stock - oi.qty, 0)
-              FROM (
-                SELECT product_id, SUM(quantity)::int AS qty
-                FROM order_items
-                WHERE order_id = $1 AND product_id IS NOT NULL
-                GROUP BY product_id
-              ) oi
-              WHERE p.id = oi.product_id
-            `,
-            [order.id]
-          );
-        }
-
-        const updated = await client.query(
-          `
-            UPDATE orders
-            SET
-              status = $1,
-              payment_status = $2
-            WHERE id = $3
-            RETURNING *
-          `,
-          [
-            nextStatus,
-            payment_status || order.payment_status,
-            req.params.id,
-          ]
-        );
-
-        await client.query('COMMIT');
-
-        return res.json({
-          order: updated.rows[0],
+      if (!order) {
+        return res.status(404).json({
+          error: 'Order not found.',
         });
-      } catch (txError) {
-        try { await client.query('ROLLBACK'); } catch (_) { /* ignore */ }
-        throw txError;
-      } finally {
-        client.release();
       }
+
+      return res.json({
+        order: await attachItems(order),
+      });
     } catch (error) {
+      console.error(
+        '[orders] Get admin order error:',
+        error
+      );
+
+      return res.status(500).json({
+        error: 'Unable to load order.',
+      });
+    }
+  }
+);
+
+
+// ============================================================
+// ADMIN - UPDATE ORDER STATUS
+// ============================================================
+
+adminRouter.put(
+  '/:id/status',
+  requireAdmin,
+  async (req, res) => {
+    const client = await db.getClient();
+
+    try {
+      const {
+        status,
+        payment_status,
+      } = req.body || {};
+
+      if (!VALID_STATUSES.includes(status)) {
+        return res.status(400).json({
+          error: 'Invalid order status.',
+        });
+      }
+
+      const validPaymentStatuses = [
+        'unpaid',
+        'paid',
+        'refunded',
+      ];
+
+      if (
+        !validPaymentStatuses.includes(
+          payment_status
+        )
+      ) {
+        return res.status(400).json({
+          error: 'Invalid payment status.',
+        });
+      }
+
+      await client.query('BEGIN');
+
+      const result = await client.query(
+        'SELECT * FROM orders WHERE id = $1 FOR UPDATE',
+        [req.params.id]
+      );
+
+      const order = result.rows[0];
+
+      if (!order) {
+        await client.query('ROLLBACK');
+
+        return res.status(404).json({
+          error: 'Order not found.',
+        });
+      }
+
+      // Keep stock accurate when cancelling/re-opening
+      // an order.
+      if (
+        order.status !== 'cancelled' &&
+        status === 'cancelled'
+      ) {
+        await client.query(
+          `
+            UPDATE products p
+            SET stock = p.stock + oi.qty
+            FROM (
+              SELECT
+                product_id,
+                SUM(quantity)::int AS qty
+              FROM order_items
+              WHERE order_id = $1
+                AND product_id IS NOT NULL
+              GROUP BY product_id
+            ) oi
+            WHERE p.id = oi.product_id
+          `,
+          [order.id]
+        );
+      } else if (
+        order.status === 'cancelled' &&
+        status !== 'cancelled'
+      ) {
+        await client.query(
+          `
+            UPDATE products p
+            SET stock = GREATEST(p.stock - oi.qty, 0)
+            FROM (
+              SELECT
+                product_id,
+                SUM(quantity)::int AS qty
+              FROM order_items
+              WHERE order_id = $1
+                AND product_id IS NOT NULL
+              GROUP BY product_id
+            ) oi
+            WHERE p.id = oi.product_id
+          `,
+          [order.id]
+        );
+      }
+
+      const updated = await client.query(
+        `
+          UPDATE orders
+          SET
+            status = $1,
+            payment_status = $2
+          WHERE id = $3
+          RETURNING *
+        `,
+        [
+          status,
+          payment_status,
+          req.params.id,
+        ]
+      );
+
+      await client.query('COMMIT');
+
+      return res.json({
+        order: updated.rows[0],
+      });
+    } catch (error) {
+      try {
+        await client.query('ROLLBACK');
+      } catch (_) {
+        // Ignore rollback errors.
+      }
+
       console.error(
         '[orders] Update status error:',
         error
       );
 
       return res.status(500).json({
-        error:
-          'Unable to update order.',
+        error: 'Unable to update order.',
       });
+    } finally {
+      client.release();
     }
   }
 );
