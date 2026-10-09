@@ -203,12 +203,6 @@ function renderPdp(product) {
   const lowStock =
     product.stock > 0 && product.stock <= 3;
 
-  const comparePrice =
-    product.compare_at_price &&
-    product.compare_at_price > product.price
-      ? `<span class="compare">${formatMoney(product.compare_at_price)}</span>`
-      : '';
-
   const root = document.querySelector('#pdp-root');
 
   root.innerHTML = `
@@ -228,7 +222,6 @@ function renderPdp(product) {
 
         <div class="pdp-price">
           ${formatMoney(product.price)}
-          ${comparePrice}
         </div>
 
         <div class="pdp-meta">
@@ -313,8 +306,8 @@ function renderPdp(product) {
           <details>
             <summary>Shipping &amp; returns</summary>
             <p>
-              Orders are confirmed by our team and dispatched
-              within 3–5 business days. Reach out via the contact
+              This is a customised, made-to-order piece. Delivery
+              takes approximately 40–60 days from order confirmation. Reach out via the contact
               details in the footer for return or exchange requests.
             </p>
           </details>
@@ -454,7 +447,7 @@ function enhanceProduct(product) {
     row.insertAdjacentHTML('afterend', `
       <ul class="pdp-perks">
         <li>Handcrafted with Indian craftsmanship</li>
-        <li>Dispatched in 3&ndash;5 business days</li>
+        <li>Customised &amp; made to order &middot; Delivery in 40&ndash;60 days</li>
         <li>Need help with size? <a href="https://wa.me/919831150476?text=${encodeURIComponent('Hi Kaasni, I have a question about ' + product.name)}" target="_blank" rel="noopener">Ask us on WhatsApp</a></li>
       </ul>`);
   }

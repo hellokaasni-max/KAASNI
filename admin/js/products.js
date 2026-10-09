@@ -304,9 +304,6 @@ async function openEditProductDrawer(id) {
     qs('#p-price').value =
       product.price;
 
-    qs('#p-compare').value =
-      product.compare_at_price || '';
-
     qs('#p-fabric').value =
       product.fabric || '';
 
@@ -431,9 +428,6 @@ async function saveProduct(e) {
 
     price:
       qs('#p-price').value,
-
-    compare_at_price:
-      qs('#p-compare').value || null,
 
     fabric:
       qs('#p-fabric').value.trim(),

@@ -4,7 +4,7 @@
 
 let allProducts = [];
 let categories = [];
-const quick = { inStock: false, onSale: false };
+const quick = { inStock: false };
 
 function currentParams() {
   return {
@@ -68,7 +68,6 @@ function renderFiltered() {
   const grid = document.querySelector('#collection-grid');
   let list = allProducts.slice();
   if (quick.inStock) list = list.filter((p) => p.stock > 0);
-  if (quick.onSale) list = list.filter((p) => p.compare_at_price && p.compare_at_price > p.price);
   renderProductGrid(grid, list);
   const c = document.querySelector('#results-count');
   if (c) c.textContent = `${list.length} ${list.length === 1 ? 'piece' : 'pieces'}`;
@@ -81,8 +80,7 @@ function buildQuickFilters() {
   wrap.id = 'quick-filters';
   wrap.className = 'quick-filters';
   wrap.innerHTML = `<span id="results-count" class="results-count" aria-live="polite"></span>
-    <button type="button" class="chip" data-k="inStock" aria-pressed="false">In stock</button>
-    <button type="button" class="chip" data-k="onSale" aria-pressed="false">On sale</button>`;
+    <button type="button" class="chip" data-k="inStock" aria-pressed="false">In stock</button>`;
   bar.querySelector('#sort-select').before(wrap);
   wrap.addEventListener('click', (e) => {
     const b = e.target.closest('.chip');

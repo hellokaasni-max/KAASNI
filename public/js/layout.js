@@ -43,7 +43,7 @@ function buildChrome() {
   // ----- Header + announcement + drawer -----
   const oldHeader = document.querySelector('.site-header');
   const headerHtml = `
-    <div class="announce"><span><span class="ann-long">Handcrafted Indian ethnic wear &nbsp;&middot;&nbsp; </span><b>Dispatched in 3&ndash;5 business days</b></span></div>
+    <div class="announce"><span><span class="ann-long">Handcrafted Indian ethnic wear &nbsp;&middot;&nbsp; </span><b>Made to order &middot; Delivery in 40&ndash;60 days</b></span></div>
     <header class="site-header">
       <div class="container header-row">
         <button class="icon-btn mobile-nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">${ICON.menu}</button>

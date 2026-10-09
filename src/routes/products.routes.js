@@ -377,7 +377,6 @@ adminRouter.post('/', requireAdmin, async (req, res, next) => {
           name,
           category_id,
           price,
-          compare_at_price,
           fabric,
           colour,
           dimensions,
@@ -389,8 +388,8 @@ adminRouter.post('/', requireAdmin, async (req, res, next) => {
           is_active
         )
         VALUES (
-          $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
-          $11, $12, $13, $14
+          $1, $2, $3, $4, $5, $6, $7, $8, $9,
+          $10, $11, $12, $13
         )
         RETURNING id, slug
       `,
@@ -399,9 +398,6 @@ adminRouter.post('/', requireAdmin, async (req, res, next) => {
         b.name,
         b.category_id || null,
         Number(b.price),
-        b.compare_at_price != null
-          ? Number(b.compare_at_price)
-          : null,
         b.fabric || '',
         b.colour || '',
         b.dimensions || '',
@@ -453,18 +449,17 @@ adminRouter.put('/:id', requireAdmin, async (req, res, next) => {
           name = $1,
           category_id = $2,
           price = $3,
-          compare_at_price = $4,
-          fabric = $5,
-          colour = $6,
-          dimensions = $7,
-          description = $8,
-          care_instructions = $9,
-          stock = $10,
-          sizes = $11,
-          is_featured = $12,
-          is_active = $13,
+          fabric = $4,
+          colour = $5,
+          dimensions = $6,
+          description = $7,
+          care_instructions = $8,
+          stock = $9,
+          sizes = $10,
+          is_featured = $11,
+          is_active = $12,
           updated_at = now()
-        WHERE id = $14
+        WHERE id = $13
       `,
       [
         b.name ?? existing.name,
@@ -476,15 +471,6 @@ adminRouter.put('/:id', requireAdmin, async (req, res, next) => {
         b.price != null
           ? Number(b.price)
           : existing.price,
-
-        b.compare_at_price !== undefined
-          ? (
-              b.compare_at_price == null ||
-              b.compare_at_price === ''
-                ? null
-                : Number(b.compare_at_price)
-            )
-          : existing.compare_at_price,
 
         b.fabric ?? existing.fabric,
 

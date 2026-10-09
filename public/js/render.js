@@ -13,29 +13,21 @@ function renderProductCard(product) {
 
   const outOfStock = product.stock <= 0;
   const lowStock = product.stock > 0 && product.stock <= 3;
-  const onSale = product.compare_at_price && product.compare_at_price > product.price;
 
   const badge = outOfStock
     ? '<span class="badge low">Sold out</span>'
     : (lowStock ? '<span class="badge low">Only a few left</span>' : '');
-  const saleBadge = onSale && !outOfStock
-    ? `<span class="badge sale">${Math.round((1 - product.price / product.compare_at_price) * 100)}% off</span>`
-    : '';
-
-  const comparePrice = onSale
-    ? `<span class="compare">${formatMoney(product.compare_at_price)}</span>`
-    : '';
 
   return `
     <a class="product-card${outOfStock ? ' sold-out' : ''}" href="/product.html?slug=${encodeURIComponent(product.slug)}">
       <div class="product-image">
         ${imageHtml}
-        ${badge}${saleBadge}
+        ${badge}
         ${outOfStock ? '' : '<span class="quick">View details</span>'}
       </div>
       <div class="name">${escapeHtml(product.name)}</div>
       <div class="fabric">${escapeHtml([product.category && product.category.name, product.fabric].filter(Boolean).join(' · '))}</div>
-      <div class="price">${formatMoney(product.price)}${comparePrice}</div>
+      <div class="price">${formatMoney(product.price)}</div>
     </a>
   `;
 }
