@@ -190,6 +190,56 @@ function wireSizeSelector(product) {
   });
 }
 
+function renderCustomisationCard(product) {
+  const icons = {
+    video: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="4" y="12" width="28" height="24" rx="4"/><path d="M32 21l12-7v20l-12-7z"/></svg>',
+    clock: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="29" cy="25" r="14"/><path d="M29 17v8l5 3M4 18h12M8 26h8M12 34h6"/></svg>',
+    needle: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M40 6L14 36"/><ellipse cx="38" cy="8" rx="1.6" ry="4" transform="rotate(40 38 8)"/><path d="M14 36c-6 2-8 6-6 8 4 0 8-2 10-8M8 22c4-4 8 0 6 4s-6 2-4 6"/></svg>',
+    spark: '<svg viewBox="0 0 48 48" fill="currentColor"><path d="M26 4c1 10 4 14 14 16-10 2-13 6-14 16-1-10-4-14-14-16 10-2 13-6 14-16z"/><path d="M10 30c.5 4 1.5 5.5 5.5 6.5-4 1-5 2.500-5.500 6.500-.5-4-1.500-5.500-5.500-6.500 4-1 5-2.500 5.500-6.500z"/></svg>'
+  };
+
+  const items = [
+    ['video', 'Video call', 'Discover the piece you love closely with our on-call stylists.'],
+    ['clock', 'Need it sooner?', 'Skip the queue, let us know when you have an event!'],
+    ['needle', 'Customise', 'Change the colour, have the neckline as per your liking, and much more!'],
+    ['spark', 'Add or remove from the set', 'Need a matching dupatta? Don\u2019t want the pants? It\u2019s all possible!']
+  ];
+
+  const msg = encodeURIComponent(
+    `Hi Kaasni, I'd like to customise "${product.name}".`
+  );
+
+  return `
+    <div class="custom-card">
+      <div class="custom-grid">
+        ${items.map(([icon, title, text]) => `
+          <div class="custom-item">
+            <span class="custom-icon" aria-hidden="true">${icons[icon]}</span>
+            <div>
+              <strong>${title}</strong>
+              <p>${text}</p>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      <a
+        class="custom-chat"
+        href="https://wa.me/${WA_NUMBER}?text=${msg}"
+        target="_blank"
+        rel="noopener"
+      >
+        <span class="custom-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="${WA_PATH}"/></svg>
+        </span>
+        <span>
+          Chat with us, and we can help you with all of the above!
+          Connect on <strong>+${WA_NUMBER.slice(0, 2)} ${WA_NUMBER.slice(2, 7)} ${WA_NUMBER.slice(7)}</strong>
+        </span>
+      </a>
+    </div>
+  `;
+}
+
 function renderPdp(product) {
   selectedSize = null;
 
@@ -286,6 +336,8 @@ function renderPdp(product) {
               </div>`
             : ''
         }
+
+        ${renderCustomisationCard(product)}
 
         ${
           product.care_instructions
